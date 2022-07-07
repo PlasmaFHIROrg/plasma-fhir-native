@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { ScrollView, View, Text, StyleSheet } from 'react-native';
 import { Card } from '@rneui/base';
 import { FHIRr4 } from '../../components/plasma-portal-components';
-import { FHIRClientHelper, FHIRResourceHelpers as PlasmaFHIR } from "plasma-fhir-app-utils";
+import { PlasmaFHIRApi, Resources } from "plasma-fhir-app-utils";
 import { FHIRClientContext } from "../../components/plasma-fhir-react-native-client-context";
 import useDataLoadScreen from "./../../hooks/useDataLoadScreen";
 
@@ -11,9 +11,9 @@ export default function ImmunizationScreen() {
     const { 
         data: immunizationData, isDataLoaded, hasErrorLoading, errorMessage,
         elLoadingSpinner, elErrorMessage
-    } = useDataLoadScreen<PlasmaFHIR.Immunization>({
-        context: context,
-        getData: FHIRClientHelper.getImmunizations
+    } = useDataLoadScreen<Resources.Immunization>({
+        patientId: context?.client?.patient.id || "",
+        getData: (patientId: string) => (PlasmaFHIRApi.fromFHIRClient(context.client as any)).readImmunization(patientId)
     });
 
     return (
@@ -32,7 +32,7 @@ export default function ImmunizationScreen() {
                 {
                     immunizationData.map((immunization, idx) => { 
                         return (
-                            <Card containerStyle={{ marginTop: 10 }} key={`ImmunizationCard_${idx}`} shadow="sm" className="border">
+                            <Card containerStyle={{ marginTop: 10 }} key={`ImmunizationCard_${idx}`}>
                                 <FHIRr4.ImmunizationView immunization={immunization} />
                             </Card>
                         );

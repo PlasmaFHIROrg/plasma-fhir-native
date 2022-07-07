@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { ScrollView, View, Text, StyleSheet } from "react-native";
-import { FHIRClientHelper, FHIRResourceHelpers as PlasmaFHIR } from "plasma-fhir-app-utils";
+import { PlasmaFHIRApi, Resources } from "plasma-fhir-app-utils";
 import { FHIRClientContext } from "../../components/plasma-fhir-react-native-client-context";
 import { FHIRr4 } from "./../../components/plasma-fhir-react-native-components";
 import useDataLoadScreen from "./../../hooks/useDataLoadScreen";
@@ -10,9 +10,9 @@ export default function EncountersScreen() {
     const { 
         data: encounters, isDataLoaded, hasErrorLoading, errorMessage,
         elLoadingSpinner, elErrorMessage
-    } = useDataLoadScreen<PlasmaFHIR.Encounter>({
-        context: context,
-        getData: FHIRClientHelper.getEncounters
+    } = useDataLoadScreen<Resources.Encounter>({
+        patientId: context?.client?.patient.id || "",
+        getData: (patientId: string) => (PlasmaFHIRApi.fromFHIRClient(context.client as any)).readEncounter(patientId)
     });
 
     return (
@@ -36,7 +36,7 @@ export default function EncountersScreen() {
                 </View>
 
             {
-                encounters.map((encounter: PlasmaFHIR.Encounter, idx: number) => { 
+                encounters.map((encounter: Resources.Encounter, idx: number) => { 
                     return (
                         <View key={"EncounterView_" + idx.toString()}>
                             <View style={[styles.row, { backgroundColor: (idx%2==0) ? "#ECE9E8" : "white" }]}>

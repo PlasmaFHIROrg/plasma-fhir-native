@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { ScrollView, View, Text, StyleSheet } from "react-native";
-import { FHIRClientHelper, FHIRResourceHelpers as PlasmaFHIR } from "plasma-fhir-app-utils";
+import { PlasmaFHIRApi, Resources } from "plasma-fhir-app-utils";
 import { FHIRClientContext } from "../../components/plasma-fhir-react-native-client-context";
 import { FHIRr4 } from "./../../components/plasma-fhir-react-native-components";
 import useDataLoadScreen from "./../../hooks/useDataLoadScreen";
@@ -10,9 +10,9 @@ export default function LabsScreen() {
     const { 
         data: labs, isDataLoaded, hasErrorLoading, errorMessage,
         elLoadingSpinner, elErrorMessage
-    } = useDataLoadScreen<PlasmaFHIR.Observation>({
-        context: context,
-        getData: FHIRClientHelper.getLabs
+    } = useDataLoadScreen<Resources.Observation>({
+        patientId: context?.client?.patient.id || "",
+        getData: (patientId: string) => (PlasmaFHIRApi.fromFHIRClient(context.client as any)).readLabs(patientId)
     });
 
     return (
@@ -35,7 +35,7 @@ export default function LabsScreen() {
                     <Text style={{ fontWeight: "bold" }}>Value</Text>
                 </View>
             {
-                labs.map((lab: PlasmaFHIR.Observation, idx: number) => { 
+                labs.map((lab: Resources.Observation, idx: number) => { 
                     return (
                         <View key={"LabView_" + idx.toString()}>
                             <View style={[styles.row, { backgroundColor: (idx%2==0) ? "#ECE9E8" : "white" }]}>

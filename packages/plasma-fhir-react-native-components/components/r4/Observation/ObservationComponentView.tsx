@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 import { Observation } from "fhir/r4";
-import { CodeableConceptView } from "..";
+import CodeableConceptView from "../CodeableConcept/CodeableConceptView";
 import ObservationValueView from "./ObservationValueView";
 
 export interface IObservationComponentViewProps { observation?: Observation };

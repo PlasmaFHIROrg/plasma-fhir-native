@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
 import { Condition } from "fhir/r4";
-import { CodeableConceptView, DateView } from "..";
+import CodeableConceptView from "../CodeableConcept/CodeableConceptView";
+import DateView from "../DateTime/DateView";
 
 export interface IConditionViewProps { condition?: Condition; }
 export const ConditionView: React.FC<IConditionViewProps> = (props) => {

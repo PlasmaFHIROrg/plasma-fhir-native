@@ -1,6 +1,11 @@
 import { View, Text, StyleSheet } from "react-native";
 import IValue from "./IValue";
-import { DateView, CodeableConceptView, PeriodView, QuantityView, RangeView, RatioView } from "..";
+import CodeableConceptView from "../CodeableConcept/CodeableConceptView";
+import DateView from "../DateTime/DateView";
+import PeriodView from "../Period/PeriodView";
+import QuantityView from "../Quantity/QuantityView";
+import RangeView from "../Range/RangeView";
+import RatioView from "../Ratio/RatioView";
 
 export interface IObservationValueViewProps { value?: IValue };
 export default function ObservationValueView(props: IObservationValueViewProps) {

@@ -1,7 +1,10 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 import { Patient } from "fhir/r4";
-import { HumanNameView, AddressView } from "..";
+import { HumanNameView } from "../HumanName/HumanNameView";
+import { AddressView } from "../Address/AddressView";
 import SexAgeDOB from "./SexAgeDOB";
+import { PlasmaThemeContext } from "../../theme";
+import { Resources } from "plasma-fhir-app-utils";
 
 export interface IPatientHeaderProps { patient?: Patient };
 export default function PatientHeader(props: IPatientHeaderProps) {
@@ -9,36 +12,34 @@ export default function PatientHeader(props: IPatientHeaderProps) {
     if (!props.patient) { return <View />; }
     if (!props.patient.name) { return <View />; }
 
+    const patientId = props.patient.id || "";
+    const officialName = Resources.Patient.getOfficialName(props.patient);
+    const homeAddress = Resources.Patient.getHomeAddress(props.patient);
+
     return (
-        <View style={styles.PatientHeader_container}>
-            <View>
-                <HumanNameView humanName={props.patient.name[0]} />
-
-                <View style={styles.PatientHeader_sexAgeDOB}>
-                    <SexAgeDOB patient={props.patient} />
-                </View>
-
-                <View style={styles.PatientHeader_patientId}>
+        <PlasmaThemeContext.Consumer>
+            {(theme) => (
+                <View style={theme.theme.PatientHeader_container}>
                     <View>
-                        <Text>{props.patient.id}</Text>
+                        <HumanNameView humanName={officialName} />
+
+                        <View style={theme.theme.PatientHeader_sexAgeDOB}>
+                            <SexAgeDOB patient={props.patient} />
+                        </View>
+
+                        <View style={theme.theme.PatientHeader_patientId}>
+                            <View>
+                                <Text style={theme.theme.PatientHeader_patientIdText}>{patientId}</Text>
+                            </View>
+                        </View>
+
+                        <View style={theme.theme.PatientHeader_address}>
+                            <Text style={theme.theme.PatientHeader_addressText}>Address</Text>
+                        </View>
+                        <AddressView address={homeAddress} />
                     </View>
                 </View>
-
-                <View style={styles.PatientHeader_address}>
-                    <Text>Address</Text>
-                </View>
-                {props.patient.address?.map((addr, idx: number) => { 
-                    return <AddressView key={`AddressView_${idx}`} address={addr} />; 
-                })}
-
-            </View>
-        </View>
+            )}
+        </PlasmaThemeContext.Consumer>
     );
 }
-
-const styles = StyleSheet.create({
-    PatientHeader_container: { },
-    PatientHeader_sexAgeDOB: { },
-    PatientHeader_patientId: { },
-    PatientHeader_address: { }
-});

@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
 import { AllergyIntoleranceReaction, CodeableConcept } from "fhir/r4";
-import { CodeableConceptView, AnnotationView } from "..";
+import CodeableConceptView from "../CodeableConcept/CodeableConceptView";
+import AnnotationView from "../Annotation/AnnotationView";
 
 // TODO: Show all annotations
 

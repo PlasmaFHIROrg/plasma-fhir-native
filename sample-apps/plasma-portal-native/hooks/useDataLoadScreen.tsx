@@ -4,8 +4,8 @@ import { IFHIRClientContext } from "plasma-fhir-react-client-context";
 import Client from 'fhirclient/lib/Client';
 
 export interface IUseDataLoadScreenProps<T> {
-    context: IFHIRClientContext;
-    getData: (fhirClient: Client) => Promise<T[]>;
+    patientId: string;
+    getData: (patientId: string) => Promise<T[]>;
 }
 
 export default function useDataLoadScreen<T>(props: IUseDataLoadScreenProps<T>) {
@@ -17,10 +17,8 @@ export default function useDataLoadScreen<T>(props: IUseDataLoadScreenProps<T>) 
     useEffect(() => {
         if (!isDataLoaded)
         {
-            const fhirClient = props.context.client;
-            if (!fhirClient)  { return; }
-            
-            props.getData(fhirClient).then((value: T[]) => {
+            const patientId = props.patientId;
+            props.getData(patientId).then((value: T[]) => {
                 setIsDataLoaded(true);
                 setData(value);
             }).catch((error) => {

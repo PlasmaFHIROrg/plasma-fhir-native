@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 import { Immunization } from "fhir/r4";
-import { CodeableConceptView } from "..";
+import CodeableConceptView from "../CodeableConcept/CodeableConceptView";
 
 export interface IImmunizationViewProps { immunization?: Immunization; }
 export const ImmunizationView: React.FC<IImmunizationViewProps> = (props) => {

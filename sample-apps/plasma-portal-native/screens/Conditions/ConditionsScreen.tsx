@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { ScrollView, View, Text, StyleSheet } from "react-native";
 import { Card } from "@rneui/base";
 import Client from 'fhirclient/lib/Client';
-import { FHIRClientHelper, FHIRResourceHelpers as PlasmaFHIR } from "plasma-fhir-app-utils";
+import { PlasmaFHIRApi, Resources } from "plasma-fhir-app-utils";
 import { FHIRClientContext } from "../../components/plasma-fhir-react-native-client-context";
 import useDataLoadScreen from "./../../hooks/useDataLoadScreen";
 import { FHIRr4 } from "./../../components/plasma-portal-components";
@@ -14,9 +14,9 @@ export default function ConditionsScreen() {
     const { 
         data: conditions, isDataLoaded, hasErrorLoading, errorMessage,
         elLoadingSpinner, elErrorMessage
-    } = useDataLoadScreen<PlasmaFHIR.Condition>({
-        context: context,
-        getData: (fhirClient: Client) => FHIRClientHelper.getConditions(fhirClient, "problem-list-item")
+    } = useDataLoadScreen<Resources.Condition>({
+        patientId: context?.client?.patient.id || "",
+        getData: (patientId: string) => (PlasmaFHIRApi.fromFHIRClient(context.client as any)).readCondition(patientId, { "category": "problem-list-item" })
     });
 
     return (
@@ -33,7 +33,7 @@ export default function ConditionsScreen() {
             {isDataLoaded && !hasErrorLoading ? 
             <View>
             {
-                conditions.map((condition: PlasmaFHIR.Condition, idx: number) => { 
+                conditions.map((condition: Resources.Condition, idx: number) => { 
                     return (
                         <Card key={"ConditionView_" + idx.toString()}>
                             <View>
